@@ -30,13 +30,9 @@ export const login = async (req,res,next) =>{
 
 export const register = async (req,res,next) =>{
     try{  
-        // encrypt sent password   
-        const hash = bcrypt.hashSync(req.body.password, 5)
-        // pass sent data to variable, set sent password to hashed password
-        const newUser = new User({
-           ...req.body,
-           password:hash, //Volgens mij is hash niet meer nodig hier, verplaatst naar model
-        })
+        const { email, password, firstName,lastName, phoneNumber } = req.body;
+
+        const user = await User.create({ firstName,lastName, email, password, phoneNumber });
 
         // STUUR TOKEN VOOR VERIFICATIE FRONTEND
 
@@ -64,8 +60,7 @@ export const register = async (req,res,next) =>{
 
 
 
-        await newUser.save()
-        res.status(200).send("user created")
+        res.status(201).json({ user });
 
     }catch(err){
         next(err)

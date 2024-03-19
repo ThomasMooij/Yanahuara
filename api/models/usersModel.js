@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
+import { hash,compare } from "bcrypt";
+
 const { Schema } = mongoose;
 
-const UsersSchema = new Schema({
+const UserSchema = new Schema({
     
     firstName:{
         type: String,
@@ -76,4 +78,4 @@ UserSchema.methods.comparePassword = async function(password){
     return result
   }
 
-export default mongoose.model("Users", UsersSchema)
+export default mongoose.model("Users", UserSchema)
