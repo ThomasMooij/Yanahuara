@@ -1,14 +1,9 @@
-export const getAllUsers = async () => {
+export const getAllUserGroups = async () => {
     try {} 
     
     catch (error) {}
   };
 
-  export const getGroup = async () => {
-    try {} 
-    
-    catch (error) {}
-  };
   export const getGroupById = async () => {
     try {} 
     
