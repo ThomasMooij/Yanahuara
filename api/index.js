@@ -3,7 +3,8 @@ import dotenv from "dotenv"
 import {mongoose} from "mongoose";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
-import authRoute from './routes/authRoute.js'
+import authRoutes from './routes/authRoutes.js'
+import uploadRoutes from './routes/uploadRoutes.js'
 
 dotenv.config()
 
@@ -14,7 +15,8 @@ app.use(express.json())
 app.use(cors({origin:"http://localhost:5173" , credentials: true}))
 app.use(cookieParser())
 
-app.use('/api/auth' , authRoute)
+app.use('/api/auth' , authRoutes)
+app.use('/api/upload', uploadRoutes)
 
 mongoose.set("strictQuery" , true)
 
