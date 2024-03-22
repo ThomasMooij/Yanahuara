@@ -59,6 +59,7 @@ const UserSchema = new Schema({
       type:String,
       enum: ['#']
     },
+    tokens:[String],
     isAdmin:{
         type:Boolean,
         default:false

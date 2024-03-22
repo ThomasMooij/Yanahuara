@@ -1,28 +1,37 @@
 import User from "../models/usersModel.js"
-import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import createError from "../functions/createError.js"
+import { generateToken } from "../functions/generateToken.js"
 
 export const login = async (req,res,next) =>{
     try{
-        const user = await User.findOne({guestname: req.body.guestname});
-        if(!user) return res.status(404).send("username or password incorrect")
+        const {email, password} = req.body
+        const user = await User.findOne({
+          email
+        })
+      
+        if (!user) return res.status(403).json({ error: "Email/Password mismatch!" });
+      
         const matched = await user.comparePassword(password)
         if (!matched) return res.status(403).json({ error: "Email/Password mismatch!" });
-        //create cookie on login (niet best practice volgens mij kan isAdmin flag beter via de server meegevenw orden)
-        const token = jwt.sign({
+      
+        const token = jwt.sign({id: user._id }, JWT_SECRET)
+      
+        user.tokens.push(token);
+      
+        await user.save();
+      
+        res.json({
+          profile: {
             id: user._id,
-            isAdmin: user.isAdmin,
-        }, process.env.JWT)
-        // get password out off user object so it is not send on completion
-        const {password, isAdmin, ...info} = user._doc 
-        //pass cookie up the chain
-        res.cookie("accessToken", token , {
-            httpOnly:true
-        })
-        res.status(200).send({details:{...info}, isAdmin})
+            name: user.name,
+            email: user.email,
+            verified: user.isVerified,
+          },
+          token, //to be saved in local/session storage.
+        });
     }catch(err){
-        console.log(err)
+        createError(next(err))
     }
 }
 
@@ -58,7 +67,14 @@ export const register = async (req,res,next) =>{
         //     html: `<h1>Your verification token is${token}</h1>`,
         //   });
 
+        const token = generateToken(6);
 
+        transport.sendMail({
+            to: user.email,
+            from: "noreply@yanahuara.net",
+            html: `<h1>Your verification token is${token}</h1>`,
+          });
+        
 
         res.status(201).json({ user });
 
