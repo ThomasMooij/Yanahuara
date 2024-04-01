@@ -18,6 +18,7 @@ export const verifyUser = async (req, res, next) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      role: user.userType,
       verified: user.verified,
     };
   
