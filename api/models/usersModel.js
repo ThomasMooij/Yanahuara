@@ -51,10 +51,6 @@ const UserSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId, 
       ref: "Geolocation" 
     }],
-    geolocation:[{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Geolocation" 
-    }],
     userTypes:{
       type:String,
       enum: ['#']

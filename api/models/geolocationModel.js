@@ -1,17 +1,16 @@
-import mongoose from 'mongoose';
-const { Schema } = mongoose;
-
 const GeolocationSchema = new Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref:'Users'
-    },
-    coordinates:{
+  userId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Users'
+  },
+  coordinates: {
+      type: { type: String, default: 'Point' },
+      coordinates: [Number], // [longitude, latitude]
+  },
+}, {
+  timestamps: true
+});
 
-    }
-  }, {
-    timestamps:true
-  }
-);
+GeolocationSchema.index({ coordinates: '2dsphere' });
 
-export default mongoose.model("Geolocation", GeolocationSchema)
+export default mongoose.model("Geolocation", GeolocationSchema);

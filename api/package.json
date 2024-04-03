@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
     "nodemon": "^2.0.22",
+    "socket.io": "^4.7.5",
     "uuid": "^9.0.1",
     "yup": "^1.4.0"
   }

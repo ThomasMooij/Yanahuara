@@ -18,6 +18,7 @@ export const getAllUserGroups = async (req, res , next) => {
     
     catch (error) {}
   };
+  
   export const addUserToGroup = async (req, res , next) => {
     try {
       if(!req.isVerified || !req.userId) return next(createError(403, "Verifica su cuenta"));
@@ -66,7 +67,7 @@ export const getAllUserGroups = async (req, res , next) => {
   
       res.status(201).json(newGroup);
 
-      
+
     } catch (error) {
   
     }

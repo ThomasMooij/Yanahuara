@@ -5,6 +5,8 @@ import cors from 'cors'
 import cookieParser from "cookie-parser";
 import authRoutes from './routes/authRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import { createServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
 
 dotenv.config()
 
