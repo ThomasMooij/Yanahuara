@@ -19,7 +19,7 @@ export const verifyUser = async (req, res, next) => {
       name: user.name,
       email: user.email,
       role: user.userType,
-      verified: user.verified,
+      verified: user.isVerified,
     };
   
     next();
