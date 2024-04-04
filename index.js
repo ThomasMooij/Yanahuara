@@ -5,6 +5,7 @@ import cors from 'cors'
 import cookieParser from "cookie-parser";
 import authRoutes from './routes/authRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import groupRoutes from './routes/groupRoutes.js'
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 
@@ -18,7 +19,11 @@ app.use(cors({origin:"http://localhost:5173" , credentials: true}))
 app.use(cookieParser())
 
 app.use('/api/auth' , authRoutes)
+app.use('/api/groups', groupRoutes)
+
+
 app.use('/api/upload', uploadRoutes)
+
 
 mongoose.set("strictQuery" , true)
 

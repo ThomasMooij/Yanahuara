@@ -1,8 +1,13 @@
-import User from "@/models/User";
-import { JWT_SECRET } from "@/utils/variables";
+import dotenv from "dotenv"
+import User from "../models/usersModel.js";
 import { verify } from "jsonwebtoken";
 
+dotenv.config()
+
 export const verifyUser = async (req, res, next) => {
+
+    const JWT_SECRET = process.env.JWT
+
     const { authorization } = req.headers;
 
     const token = authorization?.split("Bearer ")[1];

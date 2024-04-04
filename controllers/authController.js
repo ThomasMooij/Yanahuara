@@ -1,7 +1,7 @@
-import User from "@/users"
+import User from "../models/usersModel.js"
 import jwt from "jsonwebtoken"
-import createError from "@utils/createError.js"
-import { generateToken } from "@utils/generateToken.js"
+import createError from "../utils/createError.js"
+import { generateToken } from "../utils/generateToken.js"
 
 export const login = async (req,res,next) =>{
     try{
@@ -67,13 +67,13 @@ export const register = async (req,res,next) =>{
         //     html: `<h1>Your verification token is${token}</h1>`,
         //   });
 
-        const token = generateToken(6);
+        // const token = generateToken(6);
 
-        transport.sendMail({
-            to: user.email,
-            from: "noreply@yanahuara.net",
-            html: `<h1>Your verification token is${token}</h1>`,
-          });
+        // transport.sendMail({
+        //     to: user.email,
+        //     from: "noreply@yanahuara.net",
+        //     html: `<h1>Your verification token is${token}</h1>`,
+        //   });
         
 
         res.status(201).json({ user });

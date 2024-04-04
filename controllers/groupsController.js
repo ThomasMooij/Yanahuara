@@ -1,7 +1,7 @@
-import createError from "@/utils/createError";
-import Group from "@/models/groupsModel.js";
-import { getVersionedTitle } from "@/utils/versioning";
-import GroupMember from "@/models/groupMembersModel";
+import createError from "../utils/createError.js";
+import Group from "../models/groupsModel.js";
+import { getVersionedTitle } from "../utils/versioning.js";
+import GroupMember from "../models/groupMembersModel.js";
 
 export const getAllUserGroups = async (req, res , next) => {
     try {
@@ -61,10 +61,10 @@ export const getAllUserGroups = async (req, res , next) => {
       if (userGroups.length >= 5) return next(createError(429, "You are only allowed to create 5 groups"));
   
       const name = req.body.name; 
-      const versionedName = await getVersionedTitle(name, Group);
+      const versionedGroupName = await getVersionedTitle(name, Group);
   
       const newGroup = new Group({
-        name: versionedName,
+        name: versionedGroupName,
         creatorId: req.userId, 
       });
   

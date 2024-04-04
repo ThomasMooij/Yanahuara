@@ -3,7 +3,7 @@
     "plugins": [
       ["module-resolver", {
         "alias": {
-          "@/users": "./models/usersModel",
+          "@/": "./",
           "@/controllers": "./controllers",
           "@/utils": "./utils"
         }
