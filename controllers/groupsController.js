@@ -4,33 +4,50 @@ import { getVersionedTitle } from "../utils/versioning.js";
 import GroupMember from "../models/groupMembersModel.js";
 import mongoose from "mongoose";
 
-export const getAllUserGroups = async (req, res, next) => {
+export const getAllGroupsByUserId = async (req, res, next) => {
   try {
     if (!req.isVerified || !req.userId)
-      return next(createError(403, "Verifica su cuenta"));
+      return next(createError(403, "Verifique  su cuenta"));
   } catch (error) {}
 };
 
 export const getGroupById = async (req, res, next) => {
+
+  const {id, name, email, role, verified} = req.user
+
   try {
-    if (!req.isVerified || !req.userId)
-      return next(createError(403, "Verifica su cuenta"));
+    if (!verified || !id)
+      return next(createError(403, "Verifique  su cuenta"));
   } catch (error) {}
 };
 
 export const addUserToGroup = async (req, res, next) => {
-  try {
-    if (!req.isVerified || !req.userId)
-      return next(createError(403, "Verifica su cuenta"));
 
-    const { groupId, newUserId, role } = req.body;
+  const {id, name, email, verified} = req.user
+  try {
+  
+    if (!verified || !id) return next(createError(403, "Verifique  su cuenta"));
+
+    const { groupId, newUserId } = req.body;
+
+    let role = req.body.role
+    if(!newUserId) return next(createError(403, "Falta de valor"));
+    role = ['Member', 'Coordinator'].includes(role) ? role : 'Member';
 
     const roleCheck = await GroupMember.findOne({
-      userId: req.userId,
+      userId: id,
       groupId,
       role: "Coordinator",
     });
     if (!roleCheck) return next(createError(403, "Acceso denegado"));
+
+    const isAlreadyMember = await GroupMember.findOne({
+      userId: newUserId,
+      groupId,
+    });
+    if (isAlreadyMember) {
+      return next(createError(400, "El usuario ya es miembro del grupo"));
+    }
 
     const newGroupMember = new GroupMember({
       userId: newUserId,
@@ -49,18 +66,16 @@ export const addUserToGroup = async (req, res, next) => {
 export const assignUserRole = async (req, res, next) => {
   try {
     if (!req.isVerified || !req.userId)
-      return next(createError(403, "Verifica su cuenta"));
+      return next(createError(403, "Verifique  su cuenta"));
   } catch (error) {}
 };
 
 export const createGroup = async (req, res, next) => {
   try {
     const { id, email, verified } = req.user;
-
     if (!verified || !id) return next(createError(403, "Verify your account"));
 
     const userGroups = await Group.find({ creatorId: id });
-
     if (userGroups.length > 5)
       return next(createError(429, "You are only allowed to create 5 groups"));
 
@@ -76,10 +91,7 @@ export const createGroup = async (req, res, next) => {
       name: name,
       creatorId: id,
     });
-
     await newGroup.save();
-
-    console.log(newGroup);
 
     const newMember = new GroupMember({
       userId: id,
@@ -90,13 +102,45 @@ export const createGroup = async (req, res, next) => {
     await newMember.save();
 
     res.status(201).json(newGroup);
-  } catch (error) {}
+  } catch (error) {
+
+  }
 };
+
 export const getGroupMembers = async (req, res, next) => {
   try {
-    if (!req.isVerified || !req.userId)
-      return next(createError(403, "Verify your account"));
-  } catch (error) {}
+    const {id, verified } = req.user; 
+   
+    if (!verified || !id) return next(createError(403, "Verifique  su cuenta"));
+
+    const groupId = req.params.id;
+
+    const isUserInGroup = await GroupMember.findOne({
+      groupId,
+      id
+    });
+
+    if (!isUserInGroup) {
+      return next(createError(403, "Usted no esta en este grupo"));
+    }
+
+    const members = await GroupMember
+    .find({ groupId })
+    .populate('userId', 'firstName lastName email') 
+    .exec();
+
+    const userNames = members.map(member => ({
+      name: `${member.userId.firstName} ${member.userId.lastName}`,
+      email: member.userId.email,
+    }));
+
+    const totalMembers = members.length;
+
+    res.status(200).json({ totalMembers, members: userNames });
+
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const deleteGroup = async (req, res, next) => {

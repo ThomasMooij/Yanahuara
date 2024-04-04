@@ -12,7 +12,7 @@ const GroupsSchema = new Schema({
     },
     membersId: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: "User",
+        ref: "Users",
         enum: ['Member','Coordinator']
     }],
   }, {
