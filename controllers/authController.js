@@ -1,7 +1,13 @@
 import User from "../models/usersModel.js"
 import jwt from "jsonwebtoken"
 import createError from "../utils/createError.js"
+import dotenv from "dotenv"
+
 import { generateToken } from "../utils/generateToken.js"
+
+dotenv.config()
+
+const JWT = process.env.JWT
 
 export const login = async (req,res,next) =>{
     try{
@@ -15,7 +21,7 @@ export const login = async (req,res,next) =>{
         const matched = await user.comparePassword(password)
         if (!matched) return res.status(403).json({ error: "Email/Password mismatch!" });
       
-        const token = jwt.sign({id: user._id }, JWT_SECRET)
+        const token = jwt.sign({id: user._id }, JWT)
       
         user.tokens.push(token);
       
@@ -34,8 +40,6 @@ export const login = async (req,res,next) =>{
         createError(next(err))
     }
 }
-
-
 
 export const register = async (req,res,next) =>{
     try{  

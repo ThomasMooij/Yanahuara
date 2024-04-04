@@ -1,4 +1,3 @@
-
 export async function getVersionedTitle(title, Model) {
 
     const existingTitles = await Model.find({ title: { $regex: new RegExp(`^${title}(\\.\\d+\\.\\d+)?$`, 'i') } });

@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-const ReportsSchema = new Schema({
+const ReportsSchema = new Schema(
+  {
     
 
 
