@@ -1,10 +1,10 @@
 {
-  "name": "music-player",
+  "name": "Seguridad API",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon --exec babel-node index.js"
   },
   "author": "thomas mooij",
   "license": "MIT",
@@ -18,10 +18,17 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "module-alias": "^2.2.3",
     "mongoose": "^7.0.3",
     "nodemon": "^2.0.22",
     "socket.io": "^4.7.5",
     "uuid": "^9.0.1",
     "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/node": "^7.23.9",
+    "@babel/preset-env": "^7.24.4",
+    "babel-plugin-module-resolver": "^5.0.0"
   }
 }

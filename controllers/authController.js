@@ -1,7 +1,7 @@
-import User from "../models/usersModel.js"
+import User from "@/users"
 import jwt from "jsonwebtoken"
-import createError from "../functions/createError.js"
-import { generateToken } from "../functions/generateToken.js"
+import createError from "@utils/createError.js"
+import { generateToken } from "@utils/generateToken.js"
 
 export const login = async (req,res,next) =>{
     try{

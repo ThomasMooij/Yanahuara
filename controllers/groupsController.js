@@ -18,23 +18,36 @@ export const getAllUserGroups = async (req, res , next) => {
     
     catch (error) {}
   };
-  
+
   export const addUserToGroup = async (req, res , next) => {
     try {
       if(!req.isVerified || !req.userId) return next(createError(403, "Verifica su cuenta"));
 
-      const { groupId, newUserId } = req.body;
+      const { groupId, newUserId, role } = req.body;
 
       const roleCheck = await GroupMember.findOne({ userId: req.userId, groupId, role: 'Coordinator' });
-      if (!roleCheck) return next(createError(403, "Esta accion no esta permitida"));
+      if (!roleCheck) return next(createError(403, "Acceso denegado"));
 
+      const newGroupMember = new GroupMember({
+        userId: newUserId,
+        groupId,
+        role
+      })
+
+      await newGroupMember.save();
+
+      res.status(201).json(newGroupMember);
     } 
     
     catch (error) {}
   };
 
   export const assignUserRole = async (req, res , next) => {
-    try {} 
+    try {
+      if(!req.isVerified || !req.userId) return next(createError(403, "Verifica su cuenta"));
+
+
+    } 
     
     catch (error) {}
   };
