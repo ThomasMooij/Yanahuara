@@ -35,10 +35,6 @@ const UserSchema = new Schema({
       type:Boolean,
       default:false,
     },
-    groups:  [{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Groups" 
-    }],
     panicEvents:[{ 
       type: mongoose.Schema.Types.ObjectId, 
       ref: "PanicEvents" 

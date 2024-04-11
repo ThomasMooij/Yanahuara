@@ -10,11 +10,6 @@ const GroupsSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId, 
       ref: "Users" 
     },
-    membersId: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Users",
-        enum: ['Member','Coordinator']
-    }],
   }, {
     timestamps:true
   }

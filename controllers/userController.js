@@ -1,4 +1,4 @@
-import User from '../models/usersModel'
+import User from '../models/usersModel.js'
 
 export const getAllUsers = async () => {
     try {
@@ -16,12 +16,23 @@ export const getAllUsers = async () => {
       throw new Error('Fout bij het ophalen van de gebruiker: '+ id + error.message);
     }
   };
-  export const getUsersById = async (id) => {
+
+  export const getCurrentUser = async (req,res) => {
     try{
-      const users = await User.findById({id})
-  
+      
+      const {id} = req.user
+
+      const currentUser = await User.find(id);
+
+      res.status(201).json(currentUser)
+
     }catch({message}){
       throw new Error('Error getting users by id:' + message)
     }
   };
-  
+
+  export const deleteUser = async (req,res) => {
+
+    const idToBeDeleted = req.params.id
+
+  }
