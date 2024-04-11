@@ -18,5 +18,8 @@ const GroupMembersSchema = new Schema({
     timestamps:true
   }
 );
+// create index so everytime the document is requested on the groupId it saves the query result.\
+GroupMembersSchema.index({ groupId: 1 });
+
 
 export default mongoose.model("GroupMembers", GroupMembersSchema)

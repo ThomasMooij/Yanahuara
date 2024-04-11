@@ -148,5 +148,8 @@ export const getGroupMembers = async (req, res, next) => {
 
 export const deleteGroup = async (req, res, next) => {
   try {
+
+    //delete ook uit alle andere documenten. 
+
   } catch (error) {}
 };
