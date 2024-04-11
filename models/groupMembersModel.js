@@ -19,4 +19,6 @@ const GroupMembersSchema = new Schema({
   }
 );
 
+GroupMembersSchema.index({ groupId: 1});
+
 export default mongoose.model("GroupMembers", GroupMembersSchema)

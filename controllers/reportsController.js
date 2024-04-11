@@ -3,7 +3,7 @@ export const getAllReports = async () => {
     
     catch (error) {}
   };
-export const getReportById = async () => {
+export const getReportsByUserId = async () => {
     try {} 
     
     catch (error) {}
@@ -12,5 +12,5 @@ export const createReport = async () => {
     try {} 
     
     catch (error) {}
-  };
+};
   

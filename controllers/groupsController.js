@@ -2,6 +2,24 @@ import createError from "../utils/createError.js";
 import Group from "../models/groupsModel.js";
 import { getVersionedTitle } from "../utils/versioning.js";
 import GroupMember from "../models/groupMembersModel.js";
+import { isCoordinator } from "../utils/isCoordinator.js";
+import { isInGroup } from "../utils/isInGroup.js";
+import redis from 'redis';
+
+const client = redis.createClient({
+  legacyMode: true,
+  PORT: 5001,
+  url: "redis://127.0.0.1:6379",
+});
+client
+  .connect()
+  .then(() => {
+    console.log("Connected to Redis!");
+  })
+  .catch((err) => {
+    console.log("Error", err.message);
+  });
+
 
 export const getAllGroupsOfUser= async (req, res, next) => {
   try {
@@ -15,8 +33,19 @@ export const getGroupById = async (req, res, next) => {
   const {id, name, email, role, verified} = req.user
 
   try {
-    if (!verified || !id)
-      return next(createError(403, "Verifique  su cuenta"));
+
+    if (!verified || !id) return next(createError(403, "Verifique  su cuenta"));
+    
+    const isUserInGroup = await isInGroup(req.params.id, id)
+    
+    if (!isUserInGroup) {
+      return next(createError(403, "Usted no esta en este grupo"));
+    }
+
+    
+    const group = await Group.findById(req.params.id)
+
+
   } catch (error) {}
 };
 
@@ -34,20 +63,17 @@ export const addUserToGroup = async (req, res, next) => {
     if(!newUserId) return next(createError(403, "Falta de valor"));
     role = ['Member', 'Coordinator'].includes(role) ? role : 'Member';
 
-    const roleCheck = await GroupMember.findOne({
-      userId: id,
-      groupId,
-      role: "Coordinator",
-    });
+    const coordinator = await isCoordinator(userId, groupId);
 
-    if (!roleCheck) return next(createError(403, "Acceso denegado"));
+    if (!coordinator) return next(createError(403, "Solo coordinadores tienen acceso a esta funcion"));
+
     const isAlreadyMember = await GroupMember.findOne({
       userId: newUserId,
       groupId,
     });
 
     if (isAlreadyMember) {
-      return next(createError(400, "El usuario ya es miembro del grupo"));
+      return next(createError(400, "Usted ya es miembro del grupo"));
     }
     const newGroupMember = new GroupMember({
       userId: newUserId,
@@ -117,13 +143,18 @@ export const getGroupMembers = async (req, res, next) => {
    
     const groupId = req.params.id;
 
-    const isUserInGroup = await GroupMember.findOne({
-      groupId,
-      id
-    });
+    const isUserInGroup = await isInGroup(id , groupId)
+
     if (!isUserInGroup) {
       return next(createError(403, "Usted no esta en este grupo"));
     }
+
+    const cachedMembers = await client.get(req.user.id);
+    //MUST PARSE ?
+    if (cachedMembers){ 
+      console.log("SERVING FROM REDIS")
+      return res.status(200).json(JSON.parse(cachedMembers))
+    } 
 
     const members = await GroupMember
     .find({ groupId })
@@ -139,6 +170,8 @@ export const getGroupMembers = async (req, res, next) => {
 
     res.status(200).json({ totalMembers, members: userNames });
 
+    client.set( id , JSON.stringify({ totalMembers, members: userNames }))
+
   } catch (error) {
     next(error);
   }
@@ -147,7 +180,7 @@ export const getGroupMembers = async (req, res, next) => {
 export const getCurrentUserGroups = async (req, res, next) => {
   const userId = req.user.id;
   try {
-    const usersGroups = await GroupMember.find({userId:userId})
+    const userGroups = await GroupMember.find({userId:userId})
    
   } catch (error) {
     next(error);
