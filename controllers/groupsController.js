@@ -24,7 +24,7 @@ client
 export const getAllGroupsOfUser= async (req, res, next) => {
   try {
     if (!req.isVerified || !req.userId)
-      return next(createError(403, "Verifique  su cuenta"));
+      return next(createError(403, "Verifique su cuenta"));
   } catch (error) {}
 };
 
@@ -58,11 +58,8 @@ export const addUserToGroup = async (req, res, next) => {
 
     const { groupId, newUserId } = req.body;
 
-    let role = req.body.role
-
     if(!newUserId) return next(createError(403, "Falta de valor"));
-    role = ['Member', 'Coordinator'].includes(role) ? role : 'Member';
-
+   
     const coordinator = await isCoordinator(userId, groupId);
 
     if (!coordinator) return next(createError(403, "Solo coordinadores tienen acceso a esta funcion"));
@@ -75,6 +72,10 @@ export const addUserToGroup = async (req, res, next) => {
     if (isAlreadyMember) {
       return next(createError(400, "Usted ya es miembro del grupo"));
     }
+
+    let role = req.body.role
+    role = ['Member', 'Coordinator'].includes(role) ? role : 'Member';
+
     const newGroupMember = new GroupMember({
       userId: newUserId,
       groupId,
