@@ -2,8 +2,7 @@ import createError from "../utils/createError.js";
 import Group from "../models/groupsModel.js";
 import { getVersionedTitle } from "../utils/versioning.js";
 import GroupMember from "../models/groupMembersModel.js";
-import { isCoordinator } from "../utils/isCoordinator.js";
-import { isInGroup } from "../utils/isInGroup.js";
+import { isCoordinator, isInGroup } from "../utils/dbChecks.js";
 import redis from 'redis';
 
 const client = redis.createClient({

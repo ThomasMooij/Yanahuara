@@ -3,7 +3,7 @@ import Group from "@/models/groupsModel.js";
 import GroupMember from "@/models/groupMembersModel";
 import Geolocation from "@/models/geolocationModel";
 
-export const getMembersLocations = async (req, res, next) => {
+export const getMemberLocation = async (req, res, next) => {
   try {
     const { groupId, requestedMemberId } = req.params;
 

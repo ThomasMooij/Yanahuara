@@ -8,3 +8,12 @@ export const isCoordinator = async (userId, groupId) => {
   });
   return !!coordinator; 
 };
+
+export const isInGroup = async (userId, groupId) => {
+    const isUserInGroup = await GroupMember.findOne({
+            groupId,
+            userId
+          });
+      return !!isUserInGroup;
+    };
+    
