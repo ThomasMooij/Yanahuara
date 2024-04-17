@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import {mongoose} from "mongoose";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
+import './utils/cache.js';
 
 import authRoutes from './routes/authRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
